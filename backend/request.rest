@@ -1,0 +1,100 @@
+//Create a user
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "name": "User",
+    "email": "user@user.com",
+    "password": "123456",
+    "confPassword": "123456",
+    "role": "user"
+}
+
+###
+//Get All users
+GET http://localhost:5000/users
+
+###
+//GET SINGLE USER
+
+GET http://localhost:5000/users/f5bf70e8-acd0-4dff-8f3a-cc0f22ace9e7
+
+###
+//update user
+PATCH http://localhost:5000/users/406ca57f-91ef-47ae-9ed9-f8226ddbb845
+Content-Type: application/json
+
+{
+    "name": "Pippo Baudo",
+    "email": "john@gmail.com",
+    "password": "",
+    "confPassword": "",
+    "role": "user"
+}
+
+###
+//DELETE USER
+
+DELETE http://localhost:5000/users/3da0f8a1-a284-4074-bcda-d9122a950f3e
+
+###
+//Login User
+
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "user@user.com",
+    "password": "123456"
+}
+
+###
+//Login Admin
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "admin@admin.com",
+    "password": "123456"
+}
+
+###
+//get user
+GET http://localhost:5000/me
+
+###
+//logout user
+DELETE http://localhost:5000/logout
+
+###
+//get all products
+GET http://localhost:5000/products
+
+###
+//get ONE product
+GET http://localhost:5000/products/06aae1c6-8d39-427d-b244-5e3fce7d9792
+
+###
+//create product
+POST http://localhost:5000/products
+Content-Type: application/json
+
+{
+    "name": "cacca",
+    "price": 3,
+    "quantity": 50
+}
+
+###
+//update product
+PATCH http://localhost:5000/products/57784cbb-45da-47da-8dd2-b2832c1e9923
+Content-Type: application/json
+
+{
+    "name":"chocolate",
+    "price": 2.99
+}
+
+###
+//delete product
+DELETE http://localhost:5000/products/06aae1c6-8d39-427d-b244-5e3fce7d9792
