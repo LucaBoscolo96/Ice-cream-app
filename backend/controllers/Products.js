@@ -5,30 +5,30 @@ import { Op } from "sequelize";
 export const getProducts = async (req, res) => {
   try {
     let response;
-    if (req.role === "admin") {
-      response = await Product.findAll({
-        attributes: ["uuid", "name", "price", "quantity"],
-        include: [
-          {
-            model: User,
-            attributes: ["name", "email"],
-          },
-        ],
-      });
-    } else {
-      response = await Product.findAll({
-        attributes: ["uuid", "name", "price", "quantity"],
-        where: {
-          userId: req.userId,
+    // if (req.role === "admin") {
+    response = await Product.findAll({
+      attributes: ["uuid", "name", "price", "quantity"],
+      include: [
+        {
+          model: User,
+          attributes: ["name", "email"],
         },
-        include: [
-          {
-            model: User,
-            attributes: ["name", "email"],
-          },
-        ],
-      });
-    }
+      ],
+    });
+    // } else {
+    //   response = await Product.findAll({
+    //     attributes: ["uuid", "name", "price", "quantity"],
+    //     where: {
+    //       userId: req.userId,
+    //     },
+    //     include: [
+    //       {
+    //         model: User,
+    //         attributes: ["name", "email"],
+    //       },
+    //     ],
+    //   });
+    // }
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -44,33 +44,33 @@ export const getProductById = async (req, res) => {
     });
     if (!product) return res.status(404).json({ msg: "product not found" });
     let response;
-    if (req.role === "admin") {
-      response = await Product.findOne({
-        attributes: ["uuid", "name", "price", "quantity"],
-        where: {
-          id: product.id,
+    // if (req.role === "admin") {
+    response = await Product.findOne({
+      attributes: ["uuid", "name", "price", "quantity"],
+      where: {
+        id: product.id,
+      },
+      include: [
+        {
+          model: User,
+          attributes: ["name", "email"],
         },
-        include: [
-          {
-            model: User,
-            attributes: ["name", "email"],
-          },
-        ],
-      });
-    } else {
-      response = await Product.findOne({
-        attributes: ["uuid", "name", "price", "quantity"],
-        where: {
-          [Op.and]: [{ id: product.id }, { userId: req.userId }],
-        },
-        include: [
-          {
-            model: User,
-            attributes: ["name", "email"],
-          },
-        ],
-      });
-    }
+      ],
+    });
+    // } else {
+    //   response = await Product.findOne({
+    //     attributes: ["uuid", "name", "price", "quantity"],
+    //     where: {
+    //       [Op.and]: [{ id: product.id }, { userId: req.userId }],
+    //     },
+    //     include: [
+    //       {
+    //         model: User,
+    //         attributes: ["name", "email"],
+    //       },
+    //     ],
+    //   });
+    // }
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ msg: error.message });
