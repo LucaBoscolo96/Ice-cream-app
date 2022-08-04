@@ -9,6 +9,23 @@
   background-color: #ee003a;
 }
 
+.table th,
+td {
+  text-align: center !important;
+}
+
+tr:first-child {
+  text-align: left !important;
+}
+
+.is-primary {
+  background-color: #ee003a !important;
+}
+
+.is-info {
+  background-color: #3b3f40 !important;
+}
+
 @media screen and (min-width: 560px) {
   .navbar.is-fixed-top {
     right: -3rem;

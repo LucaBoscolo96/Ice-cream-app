@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const FormEditProduct = () => {
   const [name, setName] = useState("");
@@ -10,6 +11,7 @@ const FormEditProduct = () => {
   const prevQuantity = useRef(0);
   const navigate = useNavigate();
   const { id } = useParams();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const getProductById = async () => {
@@ -29,9 +31,25 @@ const FormEditProduct = () => {
     getProductById();
   }, [id]);
 
-  const updateProduct = async (e) => {
-    console.log(parseInt(prevQuantity.current, 10) + parseInt(quantity, 10));
+  const checkQuantity = (e) => {
     e.preventDefault();
+    if (user.role === "admin") {
+      if (quantity < 5) {
+        setMsg("Order at least 5 items!");
+      } else {
+        orderIcecream();
+      }
+    }
+    if (user.role === "user") {
+      if (quantity > 2) {
+        setMsg("Order maximum 2 ice cream!");
+      } else {
+        takeIcecream();
+      }
+    }
+  };
+
+  const orderIcecream = async () => {
     try {
       await axios.patch("http://localhost:5000/products/" + id, {
         name: name,
@@ -45,6 +63,21 @@ const FormEditProduct = () => {
       }
     }
   };
+  const takeIcecream = async () => {
+    try {
+      await axios.patch("http://localhost:5000/products/" + id, {
+        name: name,
+        price: price,
+        quantity: parseInt(prevQuantity.current, 10) - parseInt(quantity, 10),
+      });
+      navigate("/products");
+    } catch (error) {
+      if (error.response) {
+        setMsg(error.response.data.msg);
+      }
+    }
+  };
+
   return (
     <div>
       <h1 className="title">Products</h1>
@@ -52,7 +85,7 @@ const FormEditProduct = () => {
       <div className="card is-shadowless">
         <div className="card-content">
           <div className="content">
-            <form onSubmit={updateProduct}>
+            <form onSubmit={checkQuantity}>
               <p className="has-text-centered has-text-danger">{msg}</p>
               <div className="field">
                 <label className="label">Name</label>
@@ -91,13 +124,28 @@ const FormEditProduct = () => {
                 </div>
               </div>
               <div className="field">
-                <label className="label">
-                  How many would you like to order?
-                </label>
-                <div className="control">
+                {user && user.role === "admin" && (
+                  <div>
+                    <label className="label">
+                      How many would you like to order?
+                    </label>
+                    <span>Min 5</span>
+                  </div>
+                )}
+                {user && user.role === "user" && (
+                  <div>
+                    <label className="label">
+                      How many would you like to take?
+                    </label>
+                    <span>Max 2</span>
+                  </div>
+                )}
+
+                <div className="mt-1 control">
                   <input
                     type="number"
                     className="input"
+                    min="0"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
                     placeholder="Quantity"
@@ -106,7 +154,7 @@ const FormEditProduct = () => {
               </div>
               <div className="field">
                 <div className="control">
-                  <button type="submit" className="button is-success">
+                  <button type="submit" className="button is-primary">
                     Update
                   </button>
                 </div>
