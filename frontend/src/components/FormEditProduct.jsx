@@ -2,16 +2,36 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import emailjs from "@emailjs/browser";
 
 const FormEditProduct = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("0");
+  const [today, setToday] = useState("0");
   const [msg, setMsg] = useState("");
   const prevQuantity = useRef(0);
+  const [newQuantity, setNewQuantity] = useState();
+
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useSelector((state) => state.auth);
+
+  const customMsg = () => {
+    if (user.today === 0) {
+      return "You still haven't had any ice cream today!";
+    }
+    if (user.today === 1) {
+      return "You have already taken one ice cream today";
+    }
+    if (user.today === 2) {
+      return "You had enougth ice cream for today. Come back tomorrow!";
+    }
+  };
+  const templateParams = {
+    product: name,
+    quantity: newQuantity,
+  };
 
   useEffect(() => {
     const getProductById = async () => {
@@ -31,8 +51,13 @@ const FormEditProduct = () => {
     getProductById();
   }, [id]);
 
+  useEffect(() => {
+    setNewQuantity(parseInt(prevQuantity.current, 10) - parseInt(quantity, 10));
+  }, [quantity]);
+
   const checkQuantity = (e) => {
     e.preventDefault();
+    console.log(quantity);
     if (user.role === "admin") {
       if (quantity < 5) {
         setMsg("Order at least 5 items!");
@@ -41,9 +66,10 @@ const FormEditProduct = () => {
       }
     }
     if (user.role === "user") {
-      if (quantity > 2) {
-        setMsg("Order maximum 2 ice cream!");
+      if (user.today + parseInt(quantity, 10) > 2) {
+        setMsg("You can take maximum 2 ice cream per day!");
       } else {
+        console.log(quantity);
         takeIcecream();
       }
     }
@@ -63,17 +89,42 @@ const FormEditProduct = () => {
       }
     }
   };
+
   const takeIcecream = async () => {
+    console.log(newQuantity);
+
     try {
       await axios.patch("http://localhost:5000/products/" + id, {
         name: name,
         price: price,
-        quantity: parseInt(prevQuantity.current, 10) - parseInt(quantity, 10),
+        quantity: newQuantity,
       });
+      if (newQuantity < 10) {
+        emailjs.send(
+          "default_service",
+          "template_icecream",
+          templateParams,
+          "cD0MTG16d4UZX8cVk"
+        );
+        console.log("email sent");
+      }
       navigate("/products");
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
+      }
+    }
+    todayCount();
+  };
+
+  const todayCount = async () => {
+    try {
+      await axios.patch("http://localhost:5000/users/" + user.uuid, {
+        today: user.today + parseInt(quantity, 10),
+      });
+    } catch (error) {
+      if (error.response) {
+        setMsg("A problem occured. Retry");
       }
     }
   };
@@ -99,6 +150,7 @@ const FormEditProduct = () => {
                   />
                 </div>
               </div>
+
               <div className="field">
                 <label className="label">Price</label>
                 <div className="control">
@@ -111,6 +163,7 @@ const FormEditProduct = () => {
                   />
                 </div>
               </div>
+
               <div className="field">
                 <label className="label">Current Quantity</label>
                 <div className="control">
@@ -123,6 +176,13 @@ const FormEditProduct = () => {
                   />
                 </div>
               </div>
+
+              {user && user.role === "user" && (
+                <div>
+                  <h4>{customMsg()}</h4>
+                </div>
+              )}
+
               <div className="field">
                 {user && user.role === "admin" && (
                   <div>
@@ -147,7 +207,7 @@ const FormEditProduct = () => {
                     className="input"
                     min="0"
                     value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
+                    onChange={(e) => setQuantity(e.currentTarget.value)}
                     placeholder="Quantity"
                   />
                 </div>

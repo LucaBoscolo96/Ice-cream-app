@@ -36,11 +36,20 @@ const Users = db.define(
         notEmpty: true,
       },
     },
+
     role: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
+      },
+    },
+
+    today: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      validate: {
+        notEmpty: false,
       },
     },
   },

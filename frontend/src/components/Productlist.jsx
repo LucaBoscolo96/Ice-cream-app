@@ -32,9 +32,12 @@ const Productlist = () => {
         )}
       </div>
 
-      <div className="columns is-multiline is-centered">
+      <div className="columns is-multiline">
         {products.map((product, index) => (
-          <div key={product.uuid} className="column product-card">
+          <div
+            key={product.uuid}
+            className="column is-10 is-offset-1 product-card"
+          >
             <h2>{product.name}</h2>
             <div className="product-info">
               <h3>Price: {product.price}</h3>

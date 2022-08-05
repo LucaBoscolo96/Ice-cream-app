@@ -17,19 +17,14 @@ GET http://localhost:5000/users
 ###
 //GET SINGLE USER
 
-GET http://localhost:5000/users/f5bf70e8-acd0-4dff-8f3a-cc0f22ace9e7
-
+GET http://localhost:5000/users/d32db6ac-8bf1-4ece-8a90-9e4b676a4725
 ###
 //update user
-PATCH http://localhost:5000/users/406ca57f-91ef-47ae-9ed9-f8226ddbb845
+PATCH http://localhost:5000/users/d32db6ac-8bf1-4ece-8a90-9e4b676a4725
 Content-Type: application/json
 
 {
-    "name": "Pippo Baudo",
-    "email": "john@gmail.com",
-    "password": "",
-    "confPassword": "",
-    "role": "user"
+    "today": "0"
 }
 
 ###
@@ -55,7 +50,7 @@ Content-Type: application/json
 
 {
     "email": "admin@gmail.com",
-    "password": "123456"
+    "password": "icecream123456"
 }
 
 ###
@@ -87,12 +82,13 @@ Content-Type: application/json
 
 ###
 //update product
-PATCH http://localhost:5000/products/57784cbb-45da-47da-8dd2-b2832c1e9923
+PATCH http://localhost:5000/products/d767af5e-50bb-4637-b4b6-bd09f4eddb30
 Content-Type: application/json
 
 {
     "name":"chocolate",
-    "price": 2.99
+    "price": 2.99,
+    "quantity": 9
 }
 
 ###
