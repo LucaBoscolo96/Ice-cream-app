@@ -26,6 +26,49 @@ tr:first-child {
   background-color: #3b3f40 !important;
 }
 
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dashboard .header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.dashboard .title {
+  font-size: 2.5rem;
+}
+.dashboard .subtitle {
+  font-size: 2rem;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  min-width: 30%;
+}
+.product-card h2 {
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.product-info {
+  text-align: left;
+  width: 80%;
+  margin: 1rem auto;
+  font-size: 1.2rem;
+}
+
+.card-button {
+  width: 80%;
+  margin: 0.5rem auto;
+}
+
 @media screen and (min-width: 560px) {
   .navbar.is-fixed-top {
     right: -3rem;

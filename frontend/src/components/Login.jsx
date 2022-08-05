@@ -62,7 +62,7 @@ function Login() {
                 <div className="field mt-5">
                   <button
                     type="submit"
-                    className="button is-success is-fullwidth"
+                    className="button is-primary is-fullwidth"
                   >
                     {isLoading ? "Loading..." : "Login"}
                   </button>

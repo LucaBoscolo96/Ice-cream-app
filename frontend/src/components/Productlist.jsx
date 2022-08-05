@@ -21,54 +21,44 @@ const Productlist = () => {
     getProducts();
   };
   return (
-    <div>
-      <h1 className="title">Products</h1>
-      <h2 className="subtitle">List of products</h2>
-      {user && user.role === "admin" && (
-        <Link to="/products/add" className="button is-primary mb-2">
-          Add New Brand
-        </Link>
-      )}
-      <table className="table is-striped is-fullwidth">
-        <thead>
-          <tr>
-            {/* <th>No</th> */}
-            <th>Brand</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Created by</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product, index) => (
-            <tr key={product.uuid}>
-              {/* <td>{index + 1}</td> */}
-              <td style={{ textAlign: "left" }}>{product.name}</td>
-              <td>{product.price}</td>
-              <td>{product.quantity}</td>
-              <td>{product.user.name}</td>
-              <td>
-                <Link
-                  to={"/products/edit/" + product.uuid}
-                  className="button is-primary"
-                >
-                  {user && user.role === "admin" && "Order Ice-Cream"}
-                  {user && user.role === "user" && "Take Ice-cream"}
-                </Link>
-                {user && user.role === "admin" && (
-                  <button
-                    onClick={() => deleteProduct(product.uuid)}
-                    className="button is-info"
-                  >
-                    Delete
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="dashboard">
+      <div className="header">
+        <h1 className="title">Products</h1>
+        <h2 className="subtitle">List of products</h2>
+        {user && user.role === "admin" && (
+          <Link to="/products/add" className="button is-primary mb-2">
+            Add New Brand
+          </Link>
+        )}
+      </div>
+
+      <div className="columns is-multiline is-centered">
+        {products.map((product, index) => (
+          <div key={product.uuid} className="column product-card">
+            <h2>{product.name}</h2>
+            <div className="product-info">
+              <h3>Price: {product.price}</h3>
+              <h3>Quantity: {product.quantity}</h3>
+              <h3>Created by: {product.user.name}</h3>
+            </div>
+            <Link
+              to={"/products/edit/" + product.uuid}
+              className="button is-primary card-button"
+            >
+              {user && user.role === "admin" && "Order"}
+              {user && user.role === "user" && "Take"}
+            </Link>{" "}
+            {user && user.role === "admin" && (
+              <button
+                onClick={() => deleteProduct(product.uuid)}
+                className="button is-info card-button"
+              >
+                Delete
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
